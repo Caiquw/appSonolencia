@@ -3,13 +3,13 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import time
-import playsound
+from playsound import playsound
 
 # Inicializa MediaPipe FaceMesh
 mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(
     static_image_mode=False,
-    max_num_faces=2,
+    max_num_faces=1,
     refine_landmarks=True,          # Para obter pontos das íris (melhor para olhos)
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5
@@ -35,7 +35,7 @@ def eye_aspect_ratio(eye_landmarks):
 
 # Parâmetros de detecção de sonolência
 EAR_THRESHOLD = 0.15        # Valor abaixo do qual consideramos olho fechado (ajuste conforme necessidade)
-CONSECUTIVE_FRAMES = 120     # Número de frames consecutivos com olhos fechados para disparar alerta
+CONSECUTIVE_FRAMES = 40     # Número de frames consecutivos com olhos fechados para disparar alerta
 frame_counter = 0           # Contador de frames fechados consecutivos
 
 # Captura de vídeo
@@ -99,7 +99,7 @@ while cap.isOpened():
                         cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255), 3)
             # Opcional: alerta sonoro (descomente se tiver playsound instalado)
             
-            playsound('alarme.mp3')
+            playsound("alarme.mp3")
 
         # Exibe informações no frame
         cv2.putText(frame, f"EAR: {ear:.2f}", (50, 50),
@@ -114,7 +114,7 @@ while cap.isOpened():
     cv2.imshow('Detector de Sonolencia', frame)
 
     # Pressione 'q' para sair
-    if cv2.waitKey(1) & 0xFF == ord('space'):
+    if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
 # Limpeza
