@@ -4,7 +4,6 @@ import mediapipe as mp
 import numpy as np
 import time
 import playsound
-import keyboard
 
 # Inicializa MediaPipe FaceMesh
 mp_face_mesh = mp.solutions.face_mesh
