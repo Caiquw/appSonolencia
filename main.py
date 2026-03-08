@@ -1,11 +1,19 @@
-
+from datetime import datetime
+import database
 import cv2
 import mediapipe as mp
 import numpy as np
 import time
+import threading
 from playsound import playsound
 
 # Inicializa MediaPipe FaceMesh
+funcionario_atual = "João Silva"  # futuramente pode vir de login
+evento_inicio = None
+ear_acumulado = []
+
+
+
 mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(
     static_image_mode=False,
@@ -21,6 +29,9 @@ face_mesh = mp_face_mesh.FaceMesh(
 # Para simplificar, usamos apenas 6 pontos por olho (formato EAR clássico):
 RIGHT_EYE = [33, 160, 158, 133, 153, 144]   # pontos verticais e horizontais
 LEFT_EYE = [362, 385, 387, 263, 373, 380]
+
+def tocar_alarme():
+    threading.Thread(target=playsound, args=("alarme.mp3",), daemon=True).start()
 
 # Função para calcular EAR (Eye Aspect Ratio)
 def eye_aspect_ratio(eye_landmarks):
@@ -88,35 +99,59 @@ while cap.isOpened():
             cv2.circle(frame, (int(x), int(y)), 1, (0, 255, 0), -1)
 
     # Lógica de sonolência
+
+ # Lógica de sonolência
     if ear is not None:
         if ear < EAR_THRESHOLD:
             frame_counter += 1
+            ear_acumulado.append(ear)
+
+            if frame_counter == CONSECUTIVE_FRAMES:
+                evento_inicio = datetime.now()
+                tocar_alarme()
+
+            if frame_counter >= CONSECUTIVE_FRAMES:
+                cv2.putText(frame, "SONOLENCIA DETECTADA!", (50, 100),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255), 3)
         else:
+            if evento_inicio is not None:
+                fim = datetime.now()
+                duracao = (fim - evento_inicio).total_seconds()
+                ear_medio = sum(ear_acumulado) / len(ear_acumulado)
+                database.registrar_evento(
+                    funcionario_atual, evento_inicio, fim, duracao, ear_medio
+                )
+                evento_inicio = None
+                ear_acumulado = []
             frame_counter = 0
 
-        if frame_counter >= CONSECUTIVE_FRAMES:
-            cv2.putText(frame, "SONOLENCIA DETECTADA!", (50, 100),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 0, 255), 3)
-            # Opcional: alerta sonoro (descomente se tiver playsound instalado)
-            
-            playsound("alarme.mp3")
-
-        # Exibe informações no frame
-        cv2.putText(frame, f"EAR: {ear:.2f}", (50, 50),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
-        cv2.putText(frame, f"Contador: {frame_counter}", (50, 80),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 0), 2)
+        # Textos que aparecem quando rosto é detectado
+        cv2.putText(frame, f"EAR: {ear:.2f}", (10, 30),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2)
+        cv2.putText(frame, f"Frames: {frame_counter}", (10, 60),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2)
+        cv2.putText(frame, "Rosto: DETECTADO", (10, 90),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
     else:
-        # Se nenhum rosto for detectado, zera o contador (opcional)
         frame_counter = 0
+        # Texto de diagnóstico — sempre visível quando sem rosto
+        cv2.putText(frame, "Rosto: NAO DETECTADO", (10, 30),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
 
     # Mostra o frame
     cv2.imshow('Detector de Sonolencia', frame)
-
-    # Pressione 'q' para sair
+            
     if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+                break
 
-# Limpeza
+# Após o loop principal:
 cap.release()
 cv2.destroyAllWindows()
+
+# Gera e envia relatório ao encerrar o sistema
+from report import gerar_relatorio_html
+from email_sender import enviar_relatorio
+
+print("Gerando relatório final...")
+arquivo = gerar_relatorio_html()
+enviar_relatorio(arquivo)
