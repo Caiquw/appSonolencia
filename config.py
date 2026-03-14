@@ -1,12 +1,17 @@
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 DB_CONFIG = {
     "host":     "localhost",
     "database": "sonolencia",
     "user":     "postgres",
-    "password": "123456"
+    "password": os.getenv("DB_PASSWORD")
 }
 
 SENDGRID_CONFIG = {
-    "api_key":    "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",  # sua chave aqui
-    "remetente":  "castro.caique@outlook.com",       # e-mail verificado no SendGrid
+    "api_key":    os.getenv("SENDGRID_API_KEY"),
+    "remetente":  "castro.caique@outlook.com",
     "supervisor": "appsonolenciaunaerp@outlook.com"
 }

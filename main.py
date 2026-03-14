@@ -9,8 +9,8 @@ from playsound import playsound
 from report import gerar_relatorio_html
 from email_sender import enviar_relatorio
 
-# Inicializa MediaPipe FaceMesh
-funcionario_atual = "João Silva"  # futuramente pode vir de login
+
+funcionario_atual = "João Silva"  
 evento_inicio = None
 ear_acumulado = []
 
@@ -20,7 +20,7 @@ mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(
     static_image_mode=False,
     max_num_faces=1,
-    refine_landmarks=True,          # Para obter pontos das íris (melhor para olhos)
+    refine_landmarks=True,          
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5
 )
@@ -46,13 +46,13 @@ def eye_aspect_ratio(eye_landmarks):
     ear = (vertical1 + vertical2) / (2.0 * horizontal + 1e-6)  # +1e-6 para evitar divisão por zero
     return ear
 
-# Parâmetros de detecção de sonolência
-EAR_THRESHOLD = 0.15        # Valor abaixo do qual consideramos olho fechado (ajuste conforme necessidade)
-CONSECUTIVE_FRAMES = 40     # Número de frames consecutivos com olhos fechados para disparar alerta
+
+EAR_THRESHOLD = 0.13        # Valor abaixo do qual consideramos olho fechado (ajuste conforme necessidade)
+CONSECUTIVE_FRAMES = 120     # Número de frames consecutivos com olhos fechados para disparar alerta
 frame_counter = 0           # Contador de frames fechados consecutivos
 
-# Captura de vídeo
-cap = cv2.VideoCapture(0)   # 0 para webcam padrão
+
+cap = cv2.VideoCapture(0)
 
 while cap.isOpened():
     success, frame = cap.read()
@@ -66,7 +66,7 @@ while cap.isOpened():
     # Converte de volta para BGR para exibição com OpenCV
     frame = cv2.cvtColor(frame_rgb, cv2.COLOR_RGB2BGR)
 
-    # Variável para armazenar o EAR médio
+    
     ear = None
 
     if results.multi_face_landmarks:
