@@ -3,7 +3,7 @@
 Sistema para detectar sonolência em funcionários usando visão computacional.
 
 ## Requisitos
-- Python 3.10+
+- Python 3.10
 - PostgreSQL 17.9 instalado e rodando
 - Webcam
 
