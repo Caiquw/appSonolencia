@@ -13,5 +13,5 @@ DB_CONFIG = {
 SENDGRID_CONFIG = {
     "api_key":    os.getenv("SENDGRID_API_KEY"),
     "remetente":  "castro.caique@outlook.com",
-    "supervisor": "appsonolenciaunaerp@outlook.com"
+    "supervisor": "sonolenciaappunaerp@outlook.com"
 }

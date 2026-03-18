@@ -36,3 +36,13 @@ def buscar_eventos_hoje():
     cur.close()
     conn.close()
     return rows
+
+def buscar_csv_sonolencia():
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(
+        r"""copy (SELECT * FROM eventos_sonolencia) 
+        TO 'C:\Users\User\Desktop\appSonolencia\dados_sonolencia.csv' 
+        WITH CSV HEADER;""")
+    cur.close()
+    conn.close()

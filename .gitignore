@@ -1,4 +1,5 @@
 .env
 __pycache__/
-relatorio.html
+dados_sonolencia.csv
+teste_auto.xlsx
 *.pyc

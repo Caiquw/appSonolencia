@@ -6,9 +6,8 @@ import numpy as np
 import time
 import threading
 from playsound import playsound
-from report import gerar_relatorio_html
 from email_sender import enviar_relatorio
-
+from analise_dados import gerando_relatorio_excel
 
 funcionario_atual = "João Silva"  
 evento_inicio = None
@@ -48,7 +47,7 @@ def eye_aspect_ratio(eye_landmarks):
 
 
 EAR_THRESHOLD = 0.13        # Valor abaixo do qual consideramos olho fechado (ajuste conforme necessidade)
-CONSECUTIVE_FRAMES = 120     # Número de frames consecutivos com olhos fechados para disparar alerta
+CONSECUTIVE_FRAMES = 20     # Número de frames consecutivos com olhos fechados para disparar alerta
 frame_counter = 0           # Contador de frames fechados consecutivos
 
 
@@ -143,16 +142,16 @@ while cap.isOpened():
     # Mostra o frame
     cv2.imshow('Detector de Sonolencia', frame)
             
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-
+    if cv2.waitKey(1) & 0xFF == ord('q'):  
+        gerando_relatorio_excel()
+        break
 # Após o loop principal:
+
 cap.release()
 cv2.destroyAllWindows()
 
-# Gera e envia relatório ao encerrar o sistema
 
+print("Enviando relatório excel...")
 
-print("Gerando relatório final...")
-arquivo = gerar_relatorio_html()
+arquivo = 'teste_auto.xlsx'
 enviar_relatorio(arquivo)
