@@ -9,6 +9,32 @@ from playsound import playsound
 from email_sender import enviar_relatorio
 from analise_dados import gerando_relatorio_excel
 
+
+"""
+from login import abrir_login
+
+funcionario_atual = None
+
+def iniciar_sistema(nome):
+    global funcionario_atual
+    funcionario_atual = nome
+    print(f"✔ Funcionário logado: {nome}")
+
+# Abre login antes de iniciar a câmera
+abrir_login(iniciar_sistema)
+
+if funcionario_atual is None:
+    print("Login cancelado")
+    exit()
+
+# O restante do main.py continua normalmente a partir daqui...
+cap = cv2.VideoCapture(0)
+
+
+"""
+
+## Rode no terminal: python -c "from auth import cadastrar_gestor; cadastrar_gestor('João Gestor', 'gestor@empresa.com', 'senha123')"
+
 funcionario_atual = "João Silva"  
 evento_inicio = None
 ear_acumulado = []
