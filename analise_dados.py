@@ -1,10 +1,10 @@
 import openpyxl as opx
 import pandas as pd
-import database
+from database import buscar_csv_sonolencia
 
 
 def gerando_relatorio_excel():
-    database.buscar_csv_sonolencia()
+    buscar_csv_sonolencia()
 
     csv_sonolencia = pd.read_csv('dados_sonolencia.csv',encoding='UTF-8',sep=',')
     dtf=pd.DataFrame(csv_sonolencia)
