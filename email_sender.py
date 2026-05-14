@@ -33,4 +33,4 @@ def enviar_relatorio(arquivo_excel):
         print(f"Headers: {response.headers}")  # adiciona isso
 
     except Exception as e:
-        print(f"✘ Erro: {e}")
+        print(f"Erro: {e}")
