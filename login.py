@@ -18,10 +18,6 @@ FONTE_TITULO = ("Consolas", 15, "bold")
 FONTE_NORMAL = ("Consolas", 10)
 FONTE_BTN    = ("Consolas", 10, "bold")
 
-
-# ──────────────────────────────────────────
-# TELA INICIAL
-# ──────────────────────────────────────────
 def tela_inicial(callback_funcionario):
     janela = tk.Tk()
     janela.title("Sistema de Deteccao de Sonolencia")
@@ -54,10 +50,6 @@ def tela_inicial(callback_funcionario):
 
     janela.mainloop()
 
-
-# ──────────────────────────────────────────
-# LOGIN DO FUNCIONÁRIO
-# ──────────────────────────────────────────
 def tela_login_funcionario(callback_sucesso):
     janela = tk.Tk()
     janela.title("Login - Funcionario")
@@ -117,10 +109,6 @@ def tela_login_funcionario(callback_sucesso):
     campo_matricula.focus()
     janela.mainloop()
 
-
-# ──────────────────────────────────────────
-# LOGIN DO GESTOR
-# ──────────────────────────────────────────
 def tela_login_gestor(callback_funcionario):
     janela = tk.Tk()
     janela.title("Login - Gestor")
@@ -180,10 +168,6 @@ def tela_login_gestor(callback_funcionario):
     campo_email.focus()
     janela.mainloop()
 
-
-# ──────────────────────────────────────────
-# PAINEL DO GESTOR
-# ──────────────────────────────────────────
 def painel_gestor(id_gestor, nome_gestor, callback_funcionario):
     janela = tk.Tk()
     janela.title(f"Painel do Gestor - {nome_gestor}")
@@ -195,7 +179,6 @@ def painel_gestor(id_gestor, nome_gestor, callback_funcionario):
     tk.Label(janela, text=f"Painel do Gestor: {nome_gestor}",
              font=FONTE_TITULO, bg=COR_FUNDO, fg="#6272a4").pack(pady=15)
 
-    # ── Cadastro de funcionário ──
     frame_cad = tk.LabelFrame(janela, text=" Cadastrar Funcionario ",
                                font=FONTE_NORMAL, bg=COR_PAINEL,
                                fg=COR_TEXTO, padx=10, pady=10)
@@ -283,10 +266,6 @@ def painel_gestor(id_gestor, nome_gestor, callback_funcionario):
     atualizar_lista()
     janela.mainloop()
 
-
-# ──────────────────────────────────────────
-# UTILITÁRIO
-# ──────────────────────────────────────────
 def centralizar(janela, largura, altura):
     sw = janela.winfo_screenwidth()
     sh = janela.winfo_screenheight()
@@ -294,9 +273,5 @@ def centralizar(janela, largura, altura):
     y  = (sh - altura) // 2
     janela.geometry(f"{largura}x{altura}+{x}+{y}")
 
-
-# ──────────────────────────────────────────
-# PONTO DE ENTRADA PÚBLICO
-# ──────────────────────────────────────────
 def abrir_login(callback_sucesso):
     tela_inicial(callback_sucesso)

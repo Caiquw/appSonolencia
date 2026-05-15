@@ -17,20 +17,20 @@ def iniciar_sistema(nome):
     funcionario_atual = nome
     print(f"Funcionario logado: {nome}")
 
-# Abre a tela inicial antes da câmera
+
 abrir_login(iniciar_sistema)
 
 if funcionario_atual is None:
     print("Login cancelado")
     exit()
-# O restante do main.py continua normalmente a partir daqui...
+
 evento_inicio= None
 ear_acumulado = []
 
 cap = cv2.VideoCapture(0)
 
 
-## Rode no terminal: python -c "from auth import cadastrar_gestor; cadastrar_gestor('João Gestor', 'gestor@empresa.com', 'senha123')"
+
 """
 funcionario_atual = "João Silva"  
 evento_inicio = None
@@ -46,31 +46,25 @@ face_mesh = mp_face_mesh.FaceMesh(
     min_tracking_confidence=0.5
 )
 
-# Índices dos pontos dos olhos (MediaPipe)
-# Olho direito (íris direita): 33, 246, 161, 160, 159, 158, 157, 173
-# Olho esquerdo (íris esquerda): 263, 466, 388, 387, 386, 385, 384, 398
-# Para simplificar, usamos apenas 6 pontos por olho (formato EAR clássico):
-RIGHT_EYE = [33, 160, 158, 133, 153, 144]   # pontos verticais e horizontais
+RIGHT_EYE = [33, 160, 158, 133, 153, 144]   
 LEFT_EYE = [362, 385, 387, 263, 373, 380]
 
 def tocar_alarme():
     threading.Thread(target=playsound, args=("alarme.mp3",), daemon=True).start()
 
-# Função para calcular EAR (Eye Aspect Ratio)
+
 def eye_aspect_ratio(eye_landmarks):
-    # eye_landmarks: lista de 6 pontos (x,y) na ordem: p1, p2, p3, p4, p5, p6
-    # EAR = (||p2-p6|| + ||p3-p5||) / (2 * ||p1-p4||)
     p1, p2, p3, p4, p5, p6 = eye_landmarks
     vertical1 = np.linalg.norm(p2 - p6)
     vertical2 = np.linalg.norm(p3 - p5)
     horizontal = np.linalg.norm(p1 - p4)
-    ear = (vertical1 + vertical2) / (2.0 * horizontal + 1e-6)  # +1e-6 para evitar divisão por zero
+    ear = (vertical1 + vertical2) / (2.0 * horizontal + 1e-6) 
     return ear
 
 
-EAR_THRESHOLD = 0.13        # Valor abaixo do qual consideramos olho fechado (ajuste conforme necessidade)
-CONSECUTIVE_FRAMES = 20     # Número de frames consecutivos com olhos fechados para disparar alerta
-frame_counter = 0           # Contador de frames fechados consecutivos
+EAR_THRESHOLD = 0.13        
+CONSECUTIVE_FRAMES = 160     
+frame_counter = 0           
 
 
 cap = cv2.VideoCapture(0)
@@ -91,10 +85,10 @@ while cap.isOpened():
     ear = None
 
     if results.multi_face_landmarks:
-        # Pega o primeiro rosto detectado
+        
         face_landmarks = results.multi_face_landmarks[0]
 
-        # Extrai coordenadas (x, y) dos pontos dos olhos
+        
         h, w, _ = frame.shape
         left_eye_points = []
         right_eye_points = []
@@ -106,24 +100,21 @@ while cap.isOpened():
             lm = face_landmarks.landmark[idx]
             right_eye_points.append((lm.x * w, lm.y * h))
 
-        # Converte para arrays numpy
+        
         left_eye = np.array(left_eye_points, dtype=np.float32)
         right_eye = np.array(right_eye_points, dtype=np.float32)
 
-        # Calcula EAR para cada olho
+        
         ear_left = eye_aspect_ratio(left_eye)
         ear_right = eye_aspect_ratio(right_eye)
         ear = (ear_left + ear_right) / 2.0   # EAR médio
 
-        # Desenha os pontos dos olhos (opcional, para visualização)
+        
         for (x, y) in left_eye:
             cv2.circle(frame, (int(x), int(y)), 1, (0, 255, 0), -1)
         for (x, y) in right_eye:
             cv2.circle(frame, (int(x), int(y)), 1, (0, 255, 0), -1)
 
-    # Lógica de sonolência
-
- # Lógica de sonolência
     if ear is not None:
         if ear < EAR_THRESHOLD:
             frame_counter += 1
@@ -148,7 +139,6 @@ while cap.isOpened():
                 ear_acumulado = []
             frame_counter = 0
 
-        # Textos que aparecem quando rosto é detectado
         cv2.putText(frame, f"EAR: {ear:.2f}", (10, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 255), 2)
         cv2.putText(frame, f"Frames: {frame_counter}", (10, 60),
@@ -157,17 +147,14 @@ while cap.isOpened():
                     cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 255, 0), 2)
     else:
         frame_counter = 0
-        # Texto de diagnóstico — sempre visível quando sem rosto
         cv2.putText(frame, "Rosto: NAO DETECTADO", (10, 30),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.8, (0, 0, 255), 2)
 
-    # Mostra o frame
     cv2.imshow('Detector de Sonolencia', frame)
             
     if cv2.waitKey(1) & 0xFF == ord('q'):  
         gerando_relatorio_excel()
         break
-# Após o loop principal:
 
 cap.release()
 cv2.destroyAllWindows()
@@ -175,5 +162,5 @@ cv2.destroyAllWindows()
 
 print("Enviando relatório excel...")
 
-arquivo = 'teste_auto.xlsx'
+arquivo = 'relatorio_sonolencia.xlsx'
 enviar_relatorio(arquivo)

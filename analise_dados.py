@@ -9,7 +9,7 @@ def gerando_relatorio_excel():
     csv_sonolencia = pd.read_csv('dados_sonolencia.csv',encoding='UTF-8',sep=',')
     dtf=pd.DataFrame(csv_sonolencia)
 
-    with pd.ExcelWriter("teste_auto.xlsx", engine='openpyxl',mode='w') as writer:
+    with pd.ExcelWriter("relatorio_sonolencia.xlsx", engine='openpyxl',mode='w') as writer:
         dtf.to_excel(writer, index=False)
 
     

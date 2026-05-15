@@ -1,5 +1,5 @@
 .env
-__pycache__/
+__pycache__
 dados_sonolencia.csv
-teste_auto.xlsx
+relatorio_sonolencia.xlsx
 *.pyc

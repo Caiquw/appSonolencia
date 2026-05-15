@@ -20,7 +20,7 @@ def enviar_relatorio(arquivo_excel):
 
     anexo = Attachment(
         file_content = FileContent(conteudo),
-        file_name    = FileName("teste_auto.xlsx"),
+        file_name    = FileName(".xlsx"),
         file_type    = FileType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"),
         disposition  = Disposition("attachment")
     )
